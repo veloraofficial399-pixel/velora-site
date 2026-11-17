@@ -120,7 +120,7 @@ export const TemplatesPage: React.FC<TemplatesPageProps> = ({ openCode }) => {
             href={getWhatsAppLink('Hi Velora! I am looking at your wedding invitation designs.')}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs uppercase tracking-wider font-medium bg-[#34251D] text-[#F8F3EC] hover:bg-[#C6A16B] transition-colors"
+            className="btn-shine btn-glow-dark relative overflow-hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs uppercase tracking-wider font-medium bg-[#34251D] text-[#F8F3EC] hover:bg-[#C6A16B] transition-colors"
           >
             <MessageCircle className="w-3.5 h-3.5 text-[#C6A16B]" />
             WhatsApp

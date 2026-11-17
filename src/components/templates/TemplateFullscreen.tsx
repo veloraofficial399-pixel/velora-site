@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion, useDragControls } from 'framer-motion';
 import { ChevronUp, ChevronDown, X, ExternalLink, Info, Crown, Sparkles, Hand, Clock, Wand2, Share2, Pointer } from 'lucide-react';
 import { WeddingTemplate } from '../../types';
 import { useStore } from '../../context/StoreContext';
@@ -49,6 +49,7 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
   const [loaded, setLoaded] = useState(false);
   const [dir, setDir] = useState(1);
   const [showDetails, setShowDetails] = useState(false);
+  const sheetDrag = useDragControls();
   const [showLiveHint, setShowLiveHint] = useState(true);
   const [tip, setTip] = useState<'none' | 'next' | 'book'>('none');
   const isSignature = getRank(t) === 1;
@@ -147,7 +148,42 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
     };
   }); // re-bind each render so the handler always sees the current design
 
+  // Stop the invitation's music whenever the client leaves: unload the live site while the page is hidden
+  // (switched to WhatsApp, locked the phone, went back…) and load it fresh when they return.
+  const [suspended, setSuspended] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const stopLiveSite = () => {
+    try {
+      if (iframeRef.current) iframeRef.current.src = 'about:blank';
+    } catch {
+      /* ignore */
+    }
+    setSuspended(true);
+    setLoaded(false);
+  };
+  useEffect(() => {
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') stopLiveSite();
+      else setSuspended(false);
+    };
+    const onPageHide = () => stopLiveSite();
+    document.addEventListener('visibilitychange', onVisibility);
+    window.addEventListener('pagehide', onPageHide);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.removeEventListener('pagehide', onPageHide);
+      // closing the viewer: make sure nothing keeps playing
+      try {
+        if (iframeRef.current) iframeRef.current.src = 'about:blank';
+      } catch {
+        /* ignore */
+      }
+    };
+  }, []);
+  useEffect(() => setSuspended(false), [t.id]);
+
   const handleBook = () => {
+    stopLiveSite(); // silence the invitation before switching to WhatsApp
     setSelectedOrderTemplate(t);
     const msg =
       `Hi VELORA! 👋✨\n\n` +
@@ -165,7 +201,7 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
     <button
       type="button"
       onClick={handleBook}
-      className={`flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D9B97F] to-[#C6A16B] hover:from-[#E4C78F] hover:to-[#d6b37f] text-[#231812] uppercase tracking-wider font-bold shadow-lg shadow-black/30 transition-colors ${extra}`}
+      className={`btn-shine btn-glow relative overflow-hidden flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#D9B97F] to-[#C6A16B] hover:from-[#E4C78F] hover:to-[#d6b37f] text-[#231812] uppercase tracking-wider font-bold shadow-lg shadow-black/30 transition-colors ${extra}`}
     >
       <WhatsAppIcon className="w-4 h-4" />
       Book This Design
@@ -282,13 +318,27 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
             {!loaded && (
               <>
                 <img src={previewPoster(t)} alt="" className="absolute inset-0 w-full h-full object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
-                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-black/60 text-white text-[11px] tracking-wider flex items-center gap-2 whitespace-nowrap">
+                <div hidden={suspended} className="absolute bottom-5 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-black/60 text-white text-[11px] tracking-wider flex items-center gap-2 whitespace-nowrap">
                   <span className="w-3 h-3 rounded-full border-2 border-white/40 border-t-white animate-spin" />
                   Opening live invitation…
                 </div>
               </>
             )}
+            {suspended && (
+              <button
+                type="button"
+                onClick={() => setSuspended(false)}
+                className="absolute inset-0 z-10 flex items-center justify-center bg-black/30"
+                aria-label="Continue exploring this invitation"
+              >
+                <span className="px-4 py-2.5 rounded-full bg-black/60 backdrop-blur-md border border-[#E4C78F]/40 text-white text-[13px] font-semibold">
+                  ▶ Continue exploring
+                </span>
+              </button>
+            )}
+            {!suspended && (
             <iframe
+              ref={iframeRef}
               src={t.demoUrl}
               title={`Design ${t.id} — live`}
               onLoad={() => setLoaded(true)}
@@ -296,6 +346,7 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
               sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
               className="absolute inset-0 w-full h-full border-0 bg-transparent"
             />
+            )}
           </motion.div>
         </AnimatePresence>
 
@@ -390,19 +441,27 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
                 className="md:hidden absolute inset-0 z-30 bg-black/55 backdrop-blur-[2px] cursor-default"
               />
               <motion.div
-                className="md:hidden absolute z-30 inset-x-0 bottom-0 max-h-[78%] overflow-y-auto rounded-t-3xl bg-[#2A1D16] border-t border-[#C6A16B]/30 px-5 pt-2 pb-5 shadow-2xl"
+                className="md:hidden absolute z-30 inset-x-0 bottom-0 max-h-[80%] overflow-y-auto overscroll-contain rounded-t-3xl bg-[#2A1D16] border-t border-[#C6A16B]/30 px-5 pt-2 pb-5 shadow-2xl"
                 initial={{ y: '100%' }}
                 animate={{ y: 0 }}
                 exit={{ y: '100%' }}
                 transition={{ type: 'spring', damping: 30, stiffness: 320 }}
                 drag="y"
+                dragListener={false}
+                dragControls={sheetDrag}
+                style={{ touchAction: 'pan-y', WebkitOverflowScrolling: 'touch' }}
                 dragConstraints={{ top: 0, bottom: 0 }}
                 dragElastic={{ top: 0, bottom: 0.6 }}
                 onDragEnd={(_, info) => {
                   if (info.offset.y > 80 || info.velocity.y > 500) setShowDetails(false);
                 }}
               >
-                <div className="flex justify-center pb-2">
+                {/* drag handle: swipe down here to close (the rest of the sheet scrolls) */}
+                <div
+                  className="flex justify-center pt-1 pb-3 -mx-5 cursor-grab"
+                  style={{ touchAction: 'none' }}
+                  onPointerDown={(e) => sheetDrag.start(e)}
+                >
                   <span className="w-10 h-1.5 rounded-full bg-white/25" />
                 </div>
                 <div className="flex items-start justify-between mb-4">

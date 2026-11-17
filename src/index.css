@@ -45,3 +45,34 @@ html {
 .animate-bounce-soft {
   animation: bounce-soft 1.8s ease-in-out infinite;
 }
+
+/* WhatsApp / booking buttons: a light sweep every few seconds + a soft glow, to draw the eye */
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 45%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255, 255, 255, 0.65) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  animation: btn-shine 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes btn-shine {
+  0%, 55% { left: -60%; }
+  85%, 100% { left: 130%; }
+}
+.btn-glow { animation: btn-glow 3.2s ease-in-out infinite; }
+@keyframes btn-glow {
+  0%, 100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(228, 199, 143, 0); }
+  60% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 0 22px 2px rgba(228, 199, 143, 0.55); }
+}
+.btn-glow-dark { animation: btn-glow-dark 3.2s ease-in-out infinite; }
+@keyframes btn-glow-dark {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(198, 161, 107, 0); }
+  60% { box-shadow: 0 0 16px 2px rgba(198, 161, 107, 0.55); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn-shine::after, .btn-glow, .btn-glow-dark { animation: none; }
+}
