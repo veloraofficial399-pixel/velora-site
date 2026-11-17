@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronUp, ChevronDown, X, ExternalLink, Info, Crown, Sparkles, Hand, Clock, Wand2, Share2 } from 'lucide-react';
+import { ChevronUp, ChevronDown, X, ExternalLink, Info, Crown, Sparkles, Hand, Clock, Wand2, Share2, Pointer } from 'lucide-react';
 import { WeddingTemplate } from '../../types';
 import { useStore } from '../../context/StoreContext';
 import { formatPrice, getRank } from '../../data/templates';
@@ -352,27 +352,26 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
               transition={{ type: 'spring', damping: 20, stiffness: 220 }}
               className="pointer-events-none absolute bottom-4 inset-x-0 z-10 flex justify-center px-4"
             >
-              <motion.div
-                className="flex items-center gap-2.5 pl-3 pr-4 py-2.5 rounded-full bg-gradient-to-br from-[#3A2A20] to-[#231812] border border-[#C6A16B]/70"
-                animate={{
-                  boxShadow: [
-                    '0 8px 24px rgba(0,0,0,0.35), 0 0 0 0 rgba(228,199,143,0.55)',
-                    '0 8px 24px rgba(0,0,0,0.35), 0 0 0 10px rgba(228,199,143,0)',
-                  ],
-                }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeOut' }}
-              >
-                <motion.span
-                  className="flex w-7 h-7 items-center justify-center rounded-full bg-[#C6A16B]/20"
-                  animate={{ y: [0, -3, 0], scale: [1, 0.9, 1] }}
-                  transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  <Hand className="w-4 h-4 text-[#E4C78F]" />
-                </motion.span>
-                <span className="text-[13px] font-semibold text-white whitespace-nowrap">
-                  Tap to open <span className="text-[#E4C78F]">·</span> scroll to explore
+              <div className="flex items-center gap-3 pl-2 pr-4 py-2 rounded-full bg-black/55 backdrop-blur-md border border-[#E4C78F]/35 shadow-[0_8px_30px_rgba(0,0,0,0.35)]">
+                {/* gold pointer with a soft tap ripple */}
+                <span className="relative flex w-8 h-8 items-center justify-center">
+                  <motion.span
+                    className="absolute inset-0 rounded-full border border-[#E4C78F]"
+                    animate={{ scale: [0.7, 1.35], opacity: [0.8, 0] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: 'easeOut' }}
+                  />
+                  <motion.span
+                    className="relative flex w-8 h-8 items-center justify-center rounded-full bg-[#E4C78F]"
+                    animate={{ scale: [1, 0.9, 1] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <Pointer className="w-4 h-4 text-[#231812]" strokeWidth={2.4} />
+                  </motion.span>
                 </span>
-              </motion.div>
+                <span className="text-[13px] font-semibold text-white whitespace-nowrap">Tap to open</span>
+                <span className="w-px h-4 bg-white/25" aria-hidden="true" />
+                <span className="text-[13px] text-white/75 whitespace-nowrap">Scroll to explore</span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
