@@ -56,8 +56,10 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
   const prev = index > 0 ? list[index - 1] : null;
   const next = index >= 0 && index < list.length - 1 ? list[index + 1] : null;
 
+  const navigated = React.useRef(false);
   const go = (target: WeddingTemplate | null, direction: number) => {
     if (!target) return;
+    navigated.current = true;
     setDir(direction);
     setShowDetails(false);
     if (tip === 'next') setTip('none');
@@ -67,8 +69,37 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
   useEffect(() => {
     setLoaded(false);
     setShowLiveHint(true);
-    const timer = setTimeout(() => setShowLiveHint(false), 4000);
+    const timer = setTimeout(() => setShowLiveHint(false), 5000);
     return () => clearTimeout(timer);
+  }, [t.id]);
+
+  // Hide the "tap to open" hint as soon as the client taps into the invitation (focus moves into the iframe).
+  useEffect(() => {
+    const onBlur = () => {
+      if (document.activeElement?.tagName === 'IFRAME') setShowLiveHint(false);
+    };
+    window.addEventListener('blur', onBlur);
+    return () => window.removeEventListener('blur', onBlur);
+  }, []);
+
+  // The ▼ arrow glides downward for the first few seconds on the first design opened.
+  const [nudgeArrow, setNudgeArrow] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setNudgeArrow(false), 9000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // On every design after the first: remind about booking ~2s after it opens.
+  const lastDesign = React.useRef(t.id);
+  useEffect(() => {
+    if (lastDesign.current === t.id) return; // the first design has its own tip sequence
+    lastDesign.current = t.id;
+    const show = setTimeout(() => setTip((cur) => (cur === 'none' ? 'book' : cur)), 2000);
+    const hide = setTimeout(() => setTip((cur) => (cur === 'book' ? 'none' : cur)), 5800);
+    return () => {
+      clearTimeout(show);
+      clearTimeout(hide);
+    };
   }, [t.id]);
 
   // Once per page load: 1) bubble beside the ▼ "next design" button, 2) bubble pointing at "Book This Design".
@@ -77,10 +108,10 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
     const timers = [
       setTimeout(() => {
         onceFlag.mark(TIPS_KEY); // marked when shown (effects may run twice in development)
-        setTip((cur) => (cur === 'none' ? 'next' : cur));
-      }, 1400),
-      setTimeout(() => setTip((cur) => (cur === 'next' ? 'book' : cur)), 5400),
-      setTimeout(() => setTip('none'), 9200),
+        if (!navigated.current) setTip((cur) => (cur === 'none' ? 'next' : cur));
+      }, 5200), // after the tap-to-open hint
+      setTimeout(() => setTip((cur) => (cur === 'next' || cur === 'none' ? 'book' : cur)), 9000),
+      setTimeout(() => setTip((cur) => (cur === 'book' ? 'none' : cur)), 12600),
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
@@ -106,7 +137,10 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
 
   const handleBook = () => {
     setSelectedOrderTemplate(t);
-    const msg = `Hi Velora! I would like to book design *${t.id}* (${formatPrice(t.price)}). Please share the details needed to begin!`;
+    const msg =
+      `Hi VELORA! 👋✨\n\n` +
+      `I'd love to begin with design *${t.id}* for our wedding invitation 💍\n\n` +
+      `Please share the details needed to get started. Excited to see it come to life! 🌸`;
     window.open(getWhatsAppLink(msg), '_blank');
   };
 
@@ -276,22 +310,54 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
               animate={tip === 'next' ? { boxShadow: ['0 0 0 0 rgba(228,199,143,0.7)', '0 0 0 14px rgba(228,199,143,0)'] } : {}}
               transition={{ duration: 1.4, repeat: Infinity, ease: 'easeOut' }}
             >
-              <ChevronDown className="w-5 h-5" strokeWidth={2.5} />
+              <motion.span
+                className="flex"
+                animate={nudgeArrow && next ? { y: [0, 5, 0] } : { y: 0 }}
+                transition={nudgeArrow && next ? { duration: 1, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.2 }}
+              >
+                <ChevronDown className="w-5 h-5" strokeWidth={2.5} />
+              </motion.span>
             </motion.button>
           </div>
         </div>
 
-        {/* Live hint */}
+        {/* "Tap to open" hint: a glowing ripple in the middle + a clear message. Disappears once they tap in. */}
         <AnimatePresence>
           {showLiveHint && loaded && !showDetails && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="pointer-events-none absolute bottom-4 inset-x-0 mx-auto w-max max-w-[calc(100%-2rem)] px-3.5 py-2 rounded-full bg-black/70 text-white text-xs flex items-center gap-2"
+              className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-12 pt-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
             >
-              <Hand className="w-4 h-4 text-[#E4C78F] flex-shrink-0" />
-              Tap to open · scroll to explore
+              {/* ripple rings at the centre of the invitation */}
+              <div className="relative w-14 h-14">
+                {[0, 1, 2].map((i) => (
+                  <motion.span
+                    key={i}
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full border-2 border-[#E4C78F]"
+                    animate={{ scale: [0.6, 2.4], opacity: [0.9, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.66, ease: 'easeOut' }}
+                  />
+                ))}
+                <motion.span
+                  className="relative flex w-14 h-14 items-center justify-center rounded-full bg-[#231812]/75 backdrop-blur-sm border border-[#E4C78F]/70 shadow-2xl"
+                  animate={{ scale: [1, 0.88, 1] }}
+                  transition={{ duration: 1.3, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <Hand className="w-6 h-6 text-[#E4C78F]" />
+                </motion.span>
+              </div>
+              <motion.div
+                initial={{ y: 16, scale: 0.9 }}
+                animate={{ y: 0, scale: 1 }}
+                transition={{ type: 'spring', damping: 18, stiffness: 220 }}
+                className="mx-4 px-5 py-3 rounded-2xl bg-gradient-to-br from-[#3A2A20] to-[#231812] border border-[#C6A16B]/60 shadow-2xl shadow-black/40 text-center"
+              >
+                <p className="text-[#E4C78F] text-sm font-semibold">Tap the invitation to open it</p>
+                <p className="text-[#F8F3EC]/80 text-[11px] mt-0.5">Then scroll to explore it just like your guests will</p>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
