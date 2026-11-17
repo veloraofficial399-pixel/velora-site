@@ -41,7 +41,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Templates state (12 curated templates)
   const [templates, setTemplates] = useState<WeddingTemplate[]>(() => {
     try {
-      const saved = localStorage.getItem('velora_templates_v3');
+      const saved = localStorage.getItem('velora_templates_v4');
       return saved ? JSON.parse(saved) : INITIAL_TEMPLATES;
     } catch {
       return INITIAL_TEMPLATES;
@@ -103,7 +103,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Sync to local storage
   useEffect(() => {
     try {
-      localStorage.setItem('velora_templates_v3', JSON.stringify(templates));
+      localStorage.setItem('velora_templates_v4', JSON.stringify(templates));
     } catch (e) {
       console.warn('LocalStorage error:', e);
     }

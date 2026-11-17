@@ -11,16 +11,19 @@ export type TemplateCategory =
 
 export type CollectionTier = 'A' | 'B' | 'C' | 'D' | 'E';
 
+export type Religion = 'Hindu' | 'Muslim' | 'Christian' | 'Universal';
+
 export interface WeddingTemplate {
-  id: string; // e.g., 'A1'
+  id: string; // Design code shown to clients, e.g. 'A1' (number = rank within its collection, 1 = best)
   collection: CollectionTier;
   collectionName: string;
-  name: string; // Couple names e.g. "Erfana & Sukail"
+  name: string; // Couple names e.g. "Erfana & Sukail" — used for search/admin only, never shown on cards
   price: number;
+  religion?: Religion;
   category: TemplateCategory[];
-  description: string;
+  description?: string;
   demoUrl: string;
-  coverImage: string;
+  coverImage?: string;
   isPopular?: boolean;
   isFeatured?: boolean;
   isNew?: boolean;

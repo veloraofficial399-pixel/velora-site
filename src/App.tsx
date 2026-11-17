@@ -10,18 +10,23 @@ import { AboutPage } from './components/about/AboutPage';
 import { TestimonialsSection } from './components/home/TestimonialsSection';
 import { ContactSection } from './components/contact/ContactSection';
 import { Footer } from './components/layout/Footer';
-import { LivePreviewModal } from './components/preview/LivePreviewModal';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { FloatingWhatsApp } from './components/common/FloatingWhatsApp';
 import { PageLoader } from './components/common/PageLoader';
+import { TemplatesPage } from './components/templates/TemplatesPage';
+import { matchTemplatesRoute, navigate, usePathname } from './lib/router';
 
-const AppContent: React.FC = () => {
+const HomePage: React.FC = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [preselectedTemplateId, setPreselectedTemplateId] = useState<string | undefined>(undefined);
 
-  // Smooth scroll to section
+  // Smooth scroll to section ("templates" has its own shareable page)
   const handleNavigate = (sectionId: string) => {
+    if (sectionId === 'templates') {
+      navigate('/templates');
+      return;
+    }
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
     if (element) {
@@ -77,8 +82,8 @@ const AppContent: React.FC = () => {
           onCreateClick={() => handleNavigate('contact')}
         />
 
-        {/* 1. WEDDING WEBSITE TEMPLATES (30 Live Templates with Filters & Live Preview) */}
-        <TemplateGallery onSelectForOrder={handleSelectForOrder} />
+        {/* 1. WEDDING INVITATION DESIGNS (top 6 live, links to /templates) */}
+        <TemplateGallery />
 
         {/* 2. DIGITAL INVITATIONS (Videos, PDFs, E-Cards) */}
         <InvitationGallery onSelectForOrder={handleSelectForOrder} />
@@ -105,9 +110,6 @@ const AppContent: React.FC = () => {
         onOpenAdmin={() => setIsAdminOpen(true)}
       />
 
-      {/* INTERACTIVE LIVE PREVIEW MODAL */}
-      <LivePreviewModal onSelectForOrder={handleSelectForOrder} />
-
       {/* OWNER CONTENT MANAGEMENT SYSTEM */}
       <AdminDashboard
         isOpen={isAdminOpen}
@@ -118,6 +120,18 @@ const AppContent: React.FC = () => {
       <FloatingWhatsApp />
     </div>
   );
+};
+
+const AppContent: React.FC = () => {
+  const path = usePathname();
+  const templatesRoute = matchTemplatesRoute(path);
+
+  // Returning home from /templates: start at the top of the page.
+  useEffect(() => {
+    if (!templatesRoute) window.scrollTo(0, 0);
+  }, [!!templatesRoute]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return templatesRoute ? <TemplatesPage openCode={templatesRoute.code} /> : <HomePage />;
 };
 
 export function App() {

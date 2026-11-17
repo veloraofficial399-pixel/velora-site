@@ -153,7 +153,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPackage 
             Need something special? Contact us for a customised package.
           </p>
           <p className="text-xs text-[#7E6F64] max-w-md mx-auto">
-            From multi-day international weddings to custom domain names (.in / .com), we build tailor-made designs on request.
+            From multi-day celebrations to international weddings, we build tailor-made designs on request.
           </p>
           <div className="pt-2">
             <a

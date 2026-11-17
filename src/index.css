@@ -24,22 +24,24 @@
   scrollbar-width: none;
 }
 
-/* Custom scrollbar for modern browsers */
+/* No visible page scrollbar (scrolling still works) — keeps the page clean and lets
+   the welcome guide slide in flush from the screen edge. */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 0;
+  height: 0;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: #F8F3EC;
-}
 
-::-webkit-scrollbar-thumb {
-  background: #D4B483;
-  border-radius: 9999px;
+/* Gentle bounce for the "scroll for more" hint */
+@keyframes bounce-soft {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -6px); }
 }
-
-::-webkit-scrollbar-thumb:hover {
-  background: #C6A16B;
+.animate-bounce-soft {
+  animation: bounce-soft 1.8s ease-in-out infinite;
 }
-

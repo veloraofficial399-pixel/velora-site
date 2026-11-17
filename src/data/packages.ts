@@ -89,11 +89,10 @@ export const INITIAL_PACKAGES: PricingPackage[] = [
     collectionCode: 'E',
     name: 'Bespoke Exclusive',
     price: 1999,
-    description: 'The crowning jewel of digital wedding suites: custom web domain, interactive envelope animations, and VIP concierge.',
+    description: 'The crowning jewel of digital wedding suites: interactive envelope animations, live streaming and VIP concierge.',
     badge: 'Bespoke Signature',
     features: [
       'Access to Collection E Templates',
-      'Custom Web Domain Included (.in / .com)',
       'Interactive Wax Seal & Envelope Opening',
       'Live Video Stream Embed (YouTube / Zoom)',
       'Audio Voice Guestbook for Family Blessings',

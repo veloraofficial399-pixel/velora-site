@@ -179,7 +179,7 @@ export const Hero: React.FC<HeroProps> = ({
             >
               <div className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-[#C6A16B]" />
-                <span>Ready in 24 - 48 Hours</span>
+                <span>Ready within hours</span>
               </div>
               <div className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-[#C6A16B]" />
