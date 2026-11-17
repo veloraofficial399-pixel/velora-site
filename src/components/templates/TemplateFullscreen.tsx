@@ -5,9 +5,10 @@ import { WeddingTemplate } from '../../types';
 import { useStore } from '../../context/StoreContext';
 import { formatPrice, getRank } from '../../data/templates';
 import { previewPoster } from './LiveStoryCard';
-import { onceFlag } from './Guide';
+import { onceFlag, PeekingMan } from './Guide';
 
 const TIPS_KEY = 'velora_fullscreen_tips_seen_v1';
+const GUIDE_KEY = 'velora_fullscreen_guide_seen_v1';
 
 /** VELORA's key promises, shown in every design's details. */
 const PROMISES = [
@@ -85,7 +86,7 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
   // The ▼ arrow glides downward for the first few seconds on the first design opened.
   const [nudgeArrow, setNudgeArrow] = useState(true);
   useEffect(() => {
-    const timer = setTimeout(() => setNudgeArrow(false), 9000);
+    const timer = setTimeout(() => setNudgeArrow(false), 11000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -102,6 +103,17 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
     };
   }, [t.id]);
 
+  // Once per page load, on the first design opened: the guide peeks in from the top-left and explains.
+  const [showGuide, setShowGuide] = useState(false);
+  useEffect(() => {
+    if (onceFlag.seen(GUIDE_KEY)) return;
+    const timer = setTimeout(() => {
+      onceFlag.mark(GUIDE_KEY);
+      setShowGuide(true);
+    }, 700);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Once per page load: 1) bubble beside the ▼ "next design" button, 2) bubble pointing at "Book This Design".
   useEffect(() => {
     if (onceFlag.seen(TIPS_KEY)) return;
@@ -109,9 +121,9 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
       setTimeout(() => {
         onceFlag.mark(TIPS_KEY); // marked when shown (effects may run twice in development)
         if (!navigated.current) setTip((cur) => (cur === 'none' ? 'next' : cur));
-      }, 5200), // after the tap-to-open hint
-      setTimeout(() => setTip((cur) => (cur === 'next' || cur === 'none' ? 'book' : cur)), 9000),
-      setTimeout(() => setTip((cur) => (cur === 'book' ? 'none' : cur)), 12600),
+      }, 7400), // after the guide has said his line
+      setTimeout(() => setTip((cur) => (cur === 'next' || cur === 'none' ? 'book' : cur)), 11200),
+      setTimeout(() => setTip((cur) => (cur === 'book' ? 'none' : cur)), 14800),
     ];
     return () => timers.forEach(clearTimeout);
   }, []);
@@ -229,6 +241,15 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
       aria-modal="true"
       aria-label={`Design ${t.id}`}
     >
+      {showGuide && (
+        <PeekingMan side="left" className="top-[52px] md:top-10 z-[70]" onDone={() => setShowGuide(false)}>
+          <p className="font-serif text-[15px] sm:text-base text-[#E4C78F] leading-tight whitespace-nowrap">Experience it live ✨</p>
+          <p className="text-[11px] sm:text-xs text-[#EFE5D8]/90 leading-snug mt-0.5">
+            <strong className="text-white">Tap the invitation</strong> to open it, then scroll to explore — just like your guests will.
+          </p>
+        </PeekingMan>
+      )}
+
       {/* Top bar (mobile) */}
       <div className="md:hidden flex items-center justify-between gap-2 px-3 py-2 bg-[#1C130E] text-[#F8F3EC]">
         <button type="button" onClick={onClose} className={navBtn} aria-label="Close">
@@ -321,42 +342,36 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
           </div>
         </div>
 
-        {/* "Tap to open" hint: a glowing ripple in the middle + a clear message. Disappears once they tap in. */}
+        {/* "Tap to open" hint at the bottom: dark-gold pill with a tapping hand and a soft glow */}
         <AnimatePresence>
           {showLiveHint && loaded && !showDetails && (
             <motion.div
-              className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-12 pt-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4 }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 14 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 220 }}
+              className="pointer-events-none absolute bottom-4 inset-x-0 z-10 flex justify-center px-4"
             >
-              {/* ripple rings at the centre of the invitation */}
-              <div className="relative w-14 h-14">
-                {[0, 1, 2].map((i) => (
-                  <motion.span
-                    key={i}
-                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full border-2 border-[#E4C78F]"
-                    animate={{ scale: [0.6, 2.4], opacity: [0.9, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, delay: i * 0.66, ease: 'easeOut' }}
-                  />
-                ))}
-                <motion.span
-                  className="relative flex w-14 h-14 items-center justify-center rounded-full bg-[#231812]/75 backdrop-blur-sm border border-[#E4C78F]/70 shadow-2xl"
-                  animate={{ scale: [1, 0.88, 1] }}
-                  transition={{ duration: 1.3, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  <Hand className="w-6 h-6 text-[#E4C78F]" />
-                </motion.span>
-              </div>
               <motion.div
-                initial={{ y: 16, scale: 0.9 }}
-                animate={{ y: 0, scale: 1 }}
-                transition={{ type: 'spring', damping: 18, stiffness: 220 }}
-                className="mx-4 px-5 py-3 rounded-2xl bg-gradient-to-br from-[#3A2A20] to-[#231812] border border-[#C6A16B]/60 shadow-2xl shadow-black/40 text-center"
+                className="flex items-center gap-2.5 pl-3 pr-4 py-2.5 rounded-full bg-gradient-to-br from-[#3A2A20] to-[#231812] border border-[#C6A16B]/70"
+                animate={{
+                  boxShadow: [
+                    '0 8px 24px rgba(0,0,0,0.35), 0 0 0 0 rgba(228,199,143,0.55)',
+                    '0 8px 24px rgba(0,0,0,0.35), 0 0 0 10px rgba(228,199,143,0)',
+                  ],
+                }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeOut' }}
               >
-                <p className="text-[#E4C78F] text-sm font-semibold">Tap the invitation to open it</p>
-                <p className="text-[#F8F3EC]/80 text-[11px] mt-0.5">Then scroll to explore it just like your guests will</p>
+                <motion.span
+                  className="flex w-7 h-7 items-center justify-center rounded-full bg-[#C6A16B]/20"
+                  animate={{ y: [0, -3, 0], scale: [1, 0.9, 1] }}
+                  transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <Hand className="w-4 h-4 text-[#E4C78F]" />
+                </motion.span>
+                <span className="text-[13px] font-semibold text-white whitespace-nowrap">
+                  Tap to open <span className="text-[#E4C78F]">·</span> scroll to explore
+                </span>
               </motion.div>
             </motion.div>
           )}
