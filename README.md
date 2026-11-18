@@ -34,44 +34,44 @@ A bespoke, luxurious, and fully responsive web platform built for **VELORA** —
 VELORA features 30 fully interactive wedding website templates with real live Vercel deployments:
 
 ### 💎 Collection A – ₹499 (Starter)
-- **A1. Erfana & Sukail**: [https://erfana-sukail.vercel.app](https://erfana-sukail.vercel.app) *(Muslim Wedding, Minimal)*
-- **A2. Vandana & Sharan**: [https://vandana-sharan.vercel.app](https://vandana-sharan.vercel.app) *(Hindu Wedding, Floral)*
-- **A3. Madhav & Vaishnavi**: [https://madhav-vaishnavi-pi.vercel.app](https://madhav-vaishnavi-pi.vercel.app) *(Hindu Wedding, Minimal)*
-- **A4. Surya & Jayesh**: [https://surya-jayesh-nu.vercel.app](https://surya-jayesh-nu.vercel.app) *(Hindu Wedding, Floral)*
-- **A5. Shamil & Kamarunnisa**: [https://shamil-kamarunnisa.vercel.app](https://shamil-kamarunnisa.vercel.app) *(Muslim Wedding, Traditional)*
-- **A6. Sruthy & Ashwin**: [https://sruthy-ashwin-wedding.vercel.app](https://sruthy-ashwin-wedding.vercel.app) *(Hindu Wedding, Modern)*
+- **A1. Afreen & Sameer**: [https://velora-demo-a1.pages.dev](https://velora-demo-a1.pages.dev) *(Muslim Wedding, Minimal)*
+- **A2. Vishnu & Lakshmi**: [https://velora-demo-a2.pages.dev](https://velora-demo-a2.pages.dev) *(Hindu Wedding, Floral)*
+- **A3. Karthik & Nandhini**: [https://velora-demo-a3.pages.dev](https://velora-demo-a3.pages.dev) *(Hindu Wedding, Minimal)*
+- **A4. Divya & Nikhil**: [https://velora-demo-a4.pages.dev](https://velora-demo-a4.pages.dev) *(Hindu Wedding, Floral)*
+- **A5. Fahad & Hiba**: [https://velora-demo-a5.pages.dev](https://velora-demo-a5.pages.dev) *(Muslim Wedding, Traditional)*
+- **A6. Aparna & Abhijith**: [https://velora-demo-a6.velora-official399.workers.dev](https://velora-demo-a6.velora-official399.workers.dev) *(Hindu Wedding, Modern)*
 
 ### 💎 Collection B – ₹799 (Classic)
-- **B1. Umesh & Neethu**: [https://umesh-neethu-seven.vercel.app](https://umesh-neethu-seven.vercel.app) *(Traditional, Modern)*
-- **B2. Askar & Sufair**: [https://askar-sufair.vercel.app](https://askar-sufair.vercel.app) *(Muslim Wedding, Luxury)*
-- **B3. Alex & Jamie (Iris)**: [https://alex-jamie-iris.vercel.app](https://alex-jamie-iris.vercel.app) *(Christian Wedding, Minimal)*
-- **B4. Riza & Nizamudheen**: [https://riza-nizamudheen.vercel.app](https://riza-nizamudheen.vercel.app) *(Muslim Wedding, Floral)*
-- **B5. Simran & Shubham**: [https://simran-shubham.vercel.app](https://simran-shubham.vercel.app) *(Hindu Wedding, Luxury)*
-- **B6. Mridu & Mon**: [https://mridu-mon.vercel.app/](https://mridu-mon.vercel.app/) *(Minimal, Traditional)*
+- **B1. Umesh & Neethu**: [https://velora-demo-b1.pages.dev](https://velora-demo-b1.pages.dev) *(Traditional, Modern)*
+- **B2. Askar & Nasiba**: [https://velora-demo-b2.pages.dev](https://velora-demo-b2.pages.dev) *(Muslim Wedding, Luxury)*
+- **B3. Joel & Annie**: [https://velora-demo-b3.pages.dev](https://velora-demo-b3.pages.dev) *(Christian Wedding, Minimal)*
+- **B4. Sahla & Shihabudheen**: [https://velora-demo-b4.velora-official399.workers.dev](https://velora-demo-b4.velora-official399.workers.dev) *(Muslim Wedding, Floral)*
+- **B5. Vikram & Ishita**: [https://velora-demo-b5.pages.dev](https://velora-demo-b5.pages.dev) *(Hindu Wedding, Luxury)*
+- **B6. Pranjal & Ananya**: [https://velora-demo-b6.pages.dev](https://velora-demo-b6.pages.dev) *(Minimal, Traditional)*
 
 ### 💎 Collection C – ₹999 (Royal Premium)
-- **C1. Alex & Jamie (Magnolia)**: [https://alex-jamie-magnolia.vercel.app](https://alex-jamie-magnolia.vercel.app) *(Christian Wedding, Floral)*
-- **C2. Bestin & Mareena**: [https://bestin-mareena-nine.vercel.app](https://bestin-mareena-nine.vercel.app) *(Christian Wedding, Luxury)*
-- **C3. Nibin & Asha**: [https://nibin-asha-topaz.vercel.app](https://nibin-asha-topaz.vercel.app) *(Christian Wedding, Floral)*
-- **C4. Sivaroshan & Kirushika**: [https://sivaroshan-kirushika-kappa.vercel.app](https://sivaroshan-kirushika-kappa.vercel.app) *(Hindu Wedding, Traditional)*
-- **C5. Gokul & Greshma**: [https://gokul-greshma-pied.vercel.app/](https://gokul-greshma-pied.vercel.app/) *(Hindu Wedding, Modern)*
-- **C6. Sudharshan & Shrisha**: [https://sudharshan-shrisha.vercel.app](https://sudharshan-shrisha.vercel.app) *(Hindu Wedding, Luxury)*
+- **C1. Jacob & Sneha**: [https://velora-demo-c1.pages.dev](https://velora-demo-c1.pages.dev) *(Christian Wedding, Floral)*
+- **C2. Bestin & Mareena**: [https://velora-demo-c2.pages.dev](https://velora-demo-c2.pages.dev) *(Christian Wedding, Luxury)*
+- **C3. Nibin & Asha**: [https://velora-demo-c3.pages.dev](https://velora-demo-c3.pages.dev) *(Christian Wedding, Floral)*
+- **C4. Vigneshwar & Nithyasri**: [https://velora-demo-c4.velora-official399.workers.dev](https://velora-demo-c4.velora-official399.workers.dev) *(Hindu Wedding, Traditional)*
+- **C5. Gokul & Greeshma**: [https://velora-demo-c5.pages.dev](https://velora-demo-c5.pages.dev) *(Hindu Wedding, Modern)*
+- **C6. Karthikeyan & Harini**: [https://velora-demo-c6.pages.dev](https://velora-demo-c6.pages.dev) *(Hindu Wedding, Luxury)*
 
 ### 💎 Collection D – ₹1,499 (Luxury Haute)
-- **D1. Imthiyas & Rinshi**: [https://imthiyas-rinshi-tau.vercel.app](https://imthiyas-rinshi-tau.vercel.app) *(Muslim Wedding, Luxury)*
-- **D2. Sajjadali & Ayisha**: [https://sajjadali-ayisha-silk.vercel.app](https://sajjadali-ayisha-silk.vercel.app) *(Muslim Wedding, Floral)*
-- **D3. Aarav & Ananya**: [https://aarav-ananya-seven.vercel.app](https://aarav-ananya-seven.vercel.app) *(Hindu Wedding, Luxury)*
-- **D4. Mahera & Arman**: [https://mahera-arman.vercel.app](https://mahera-arman.vercel.app) *(Muslim Wedding, Royal)*
-- **D5. Ritika & Rohit**: [https://ritika-rohit.vercel.app/](https://ritika-rohit.vercel.app/) *(Hindu Wedding, Floral)*
-- **D6. Rohit & Tania**: [https://rohit-tania.vercel.app](https://rohit-tania.vercel.app) *(Modern, Luxury)*
+- **D1. Arshad & Shifna**: [https://velora-demo-d1.pages.dev](https://velora-demo-d1.pages.dev) *(Muslim Wedding, Luxury)*
+- **D2. Ayesha & Sajjad**: [https://velora-demo-d2.velora-official399.workers.dev](https://velora-demo-d2.velora-official399.workers.dev) *(Muslim Wedding, Floral)*
+- **D3. Aarav & Ananya**: [https://velora-demo-d3.pages.dev](https://velora-demo-d3.pages.dev) *(Hindu Wedding, Luxury)*
+- **D4. Imran & Mehnaz**: [https://velora-demo-d4.pages.dev](https://velora-demo-d4.pages.dev) *(Muslim Wedding, Royal)*
+- **D5. Rohit & Ritika**: [https://velora-demo-d5.pages.dev](https://velora-demo-d5.pages.dev) *(Hindu Wedding, Floral)*
+- **D6. Rohit & Tania**: [https://velora-demo-d6.velora-official399.workers.dev](https://velora-demo-d6.velora-official399.workers.dev) *(Modern, Luxury)*
 
 ### 💎 Collection E – ₹1,999 (Bespoke Exclusive)
-- **E1. Ramkumar & Priyadarshini**: [https://ramkumar-priyadarshini.vercel.app](https://ramkumar-priyadarshini.vercel.app) *(Traditional, Royal)*
-- **E2. Nithin & Daya**: [https://nithin-daya-sigma.vercel.app](https://nithin-daya-sigma.vercel.app) *(Hindu Wedding, Luxury)*
-- **E3. Esvaran & Ashwieni**: [https://esvaran-ashwieni.vercel.app](https://esvaran-ashwieni.vercel.app) *(Cross-Cultural Luxury)*
-- **E4. Akash & Sukanya**: [https://akash-sukanya-flame.vercel.app](https://akash-sukanya-flame.vercel.app) *(Enchanted Floral)*
-- **E5. Nafeesa & Sofian**: [https://nafeesa-sofian-rosy.vercel.app](https://nafeesa-sofian-rosy.vercel.app) *(Muslim Wedding, Royal)*
-- **E6. Naadham & Rishi**: [https://naadham-rishi-two.vercel.app](https://naadham-rishi-two.vercel.app) *(Music Symphony Theme)*
+- **E1. Siddharth & Lakshmi Priya**: [https://velora-demo-e1.pages.dev](https://velora-demo-e1.pages.dev) *(Traditional, Royal)*
+- **E2. Nithin & Daya**: [https://velora-demo-e2.velora-official399.workers.dev](https://velora-demo-e2.velora-official399.workers.dev) *(Hindu Wedding, Luxury)*
+- **E3. Kumaran & Thanusha**: [https://velora-demo-e3.velora-official399.workers.dev](https://velora-demo-e3.velora-official399.workers.dev) *(Cross-Cultural Luxury)*
+- **E4. Akash & Sukanya**: [https://velora-demo-e4.velora-official399.workers.dev](https://velora-demo-e4.velora-official399.workers.dev) *(Enchanted Floral)*
+- **E5. Nafeesa & Sofian**: [https://velora-demo-e5.velora-official399.workers.dev](https://velora-demo-e5.velora-official399.workers.dev) *(Muslim Wedding, Royal)*
+- **E6. Naadham & Rishi**: [https://velora-demo-e6.velora-official399.workers.dev](https://velora-demo-e6.velora-official399.workers.dev) *(Music Symphony Theme)*
 
 ---
 

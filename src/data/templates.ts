@@ -15,40 +15,40 @@ export const COLLECTIONS: Record<CollectionTier, { name: string; price: number }
 
 // [code, couple names, live URL, religion]
 const ROWS: [string, string, string, Religion][] = [
-  ['A1', 'Erfana & Sukail', 'https://erfana-sukail.vercel.app', 'Muslim'],
-  ['A2', 'Vandana & Sharan', 'https://vandana-sharan.vercel.app', 'Hindu'],
-  ['A3', 'Madhav & Vaishnavi', 'https://madhav-vaishnavi-pi.vercel.app', 'Hindu'],
-  ['A4', 'Surya & Jayesh', 'https://surya-jayesh-nu.vercel.app', 'Hindu'],
-  ['A5', 'Shamil & Kamarunnisa', 'https://shamil-kamarunnisa.vercel.app', 'Muslim'],
-  ['A6', 'Sruthy & Ashwin', 'https://sruthy-ashwin-wedding.vercel.app', 'Hindu'],
+  ['A1', 'Afreen & Sameer', 'https://velora-demo-a1.pages.dev', 'Muslim'],
+  ['A2', 'Vishnu & Lakshmi', 'https://velora-demo-a2.pages.dev', 'Hindu'],
+  ['A3', 'Karthik & Nandhini', 'https://velora-demo-a3.pages.dev', 'Hindu'],
+  ['A4', 'Divya & Nikhil', 'https://velora-demo-a4.pages.dev', 'Hindu'],
+  ['A5', 'Fahad & Hiba', 'https://velora-demo-a5.pages.dev', 'Muslim'],
+  ['A6', 'Aparna & Abhijith', 'https://velora-demo-a6.velora-official399.workers.dev', 'Hindu'],
 
-  ['B1', 'Umesh & Neethu', 'https://umesh-neethu-seven.vercel.app', 'Hindu'],
-  ['B2', 'Askar & Sufair', 'https://askar-sufair.vercel.app', 'Muslim'],
-  ['B3', 'Alex & Jamie (Iris)', 'https://alex-jamie-iris.vercel.app', 'Christian'],
-  ['B4', 'Riza & Nizamudheen', 'https://riza-nizamudheen.vercel.app', 'Muslim'],
-  ['B5', 'Simran & Shubham', 'https://simran-shubham.vercel.app', 'Hindu'],
-  ['B6', 'Mridula & Monjyoti', 'https://mridu-mon.vercel.app', 'Hindu'],
+  ['B1', 'Umesh & Neethu', 'https://velora-demo-b1.pages.dev', 'Hindu'],
+  ['B2', 'Askar & Nasiba', 'https://velora-demo-b2.pages.dev', 'Muslim'],
+  ['B3', 'Joel & Annie', 'https://velora-demo-b3.pages.dev', 'Christian'],
+  ['B4', 'Sahla & Shihabudheen', 'https://velora-demo-b4.velora-official399.workers.dev', 'Muslim'],
+  ['B5', 'Vikram & Ishita', 'https://velora-demo-b5.pages.dev', 'Hindu'],
+  ['B6', 'Pranjal & Ananya', 'https://velora-demo-b6.pages.dev', 'Hindu'],
 
-  ['C1', 'Alex & Jamie (Magnolia)', 'https://alex-jamie-magnolia.vercel.app', 'Christian'],
-  ['C2', 'Bestin & Mareena', 'https://bestin-mareena-nine.vercel.app', 'Christian'],
-  ['C3', 'Nibin & Asha', 'https://nibin-asha-topaz.vercel.app', 'Christian'],
-  ['C4', 'Sivaroshan & Kirushika', 'https://sivaroshan-kirushika-kappa.vercel.app', 'Hindu'],
-  ['C5', 'Gokul & Greeshma', 'https://gokul-greshma-pied.vercel.app', 'Hindu'],
-  ['C6', 'Sudharshan & Shrisha', 'https://sudharshan-shrisha.vercel.app', 'Hindu'],
+  ['C1', 'Jacob & Sneha', 'https://velora-demo-c1.pages.dev', 'Christian'],
+  ['C2', 'Bestin & Mareena', 'https://velora-demo-c2.pages.dev', 'Christian'],
+  ['C3', 'Nibin & Asha', 'https://velora-demo-c3.pages.dev', 'Christian'],
+  ['C4', 'Vigneshwar & Nithyasri', 'https://velora-demo-c4.velora-official399.workers.dev', 'Hindu'],
+  ['C5', 'Gokul & Greeshma', 'https://velora-demo-c5.pages.dev', 'Hindu'],
+  ['C6', 'Karthikeyan & Harini', 'https://velora-demo-c6.pages.dev', 'Hindu'],
 
-  ['D1', 'Imthiyas & Rinshi', 'https://imthiyas-rinshi-tau.vercel.app', 'Muslim'],
-  ['D2', 'Sajjad Ali & Ayisha', 'https://sajjadali-ayisha-silk.vercel.app', 'Muslim'],
-  ['D3', 'Aarav & Ananya', 'https://aarav-ananya-seven.vercel.app', 'Hindu'],
-  ['D4', 'Mahera & Arman', 'https://mahera-arman.vercel.app', 'Muslim'],
-  ['D5', 'Ritika & Rohit', 'https://ritika-rohit.vercel.app', 'Hindu'],
-  ['D6', 'Rohit & Tania', 'https://rohit-tania.vercel.app', 'Hindu'],
+  ['D1', 'Arshad & Shifna', 'https://velora-demo-d1.pages.dev', 'Muslim'],
+  ['D2', 'Ayesha & Sajjad', 'https://velora-demo-d2.velora-official399.workers.dev', 'Muslim'],
+  ['D3', 'Aarav & Ananya', 'https://velora-demo-d3.pages.dev', 'Hindu'],
+  ['D4', 'Imran & Mehnaz', 'https://velora-demo-d4.pages.dev', 'Muslim'],
+  ['D5', 'Rohit & Ritika', 'https://velora-demo-d5.pages.dev', 'Hindu'],
+  ['D6', 'Rohit & Tania', 'https://velora-demo-d6.velora-official399.workers.dev', 'Hindu'],
 
-  ['E1', 'Ramkumar & Priyadarshini', 'https://ramkumar-priyadarshini.vercel.app', 'Hindu'],
-  ['E2', 'Nithin & Daya', 'https://nithin-daya-sigma.vercel.app', 'Christian'],
-  ['E3', 'Esvaran & Ashwieni', 'https://esvaran-ashwieni.vercel.app', 'Hindu'],
-  ['E4', 'Akash & Sukanya', 'https://akash-sukanya-flame.vercel.app', 'Hindu'],
-  ['E5', 'Nafeesa & Sofian', 'https://nafeesa-sofian-rosy.vercel.app', 'Muslim'],
-  ['E6', 'Naadham & Rishi', 'https://naadham-rishi-two.vercel.app', 'Hindu'],
+  ['E1', 'Siddharth & Lakshmi Priya', 'https://velora-demo-e1.pages.dev', 'Hindu'],
+  ['E2', 'Nithin & Daya', 'https://velora-demo-e2.velora-official399.workers.dev', 'Christian'],
+  ['E3', 'Kumaran & Thanusha', 'https://velora-demo-e3.velora-official399.workers.dev', 'Hindu'],
+  ['E4', 'Akash & Sukanya', 'https://velora-demo-e4.velora-official399.workers.dev', 'Hindu'],
+  ['E5', 'Nafeesa & Sofian', 'https://velora-demo-e5.velora-official399.workers.dev', 'Muslim'],
+  ['E6', 'Naadham & Rishi', 'https://velora-demo-e6.velora-official399.workers.dev', 'Hindu'],
 ];
 
 const RELIGION_CATEGORY: Record<Religion, TemplateCategory> = {
@@ -58,7 +58,12 @@ const RELIGION_CATEGORY: Record<Religion, TemplateCategory> = {
   Universal: 'Modern',
 };
 
-export const INITIAL_TEMPLATES: WeddingTemplate[] = ROWS.map(([id, name, demoUrl, religion]) => {
+// Local review only: `VITE_DEMO_LOCAL=1 npm run dev` points the live iframes at the demo sites running on this Mac
+// (ports 5101…5130, same order as ROWS). Without the variable (production) the real URLs above are used.
+const LOCAL_DEMOS = (import.meta as any).env?.VITE_DEMO_LOCAL === '1';
+
+export const INITIAL_TEMPLATES: WeddingTemplate[] = ROWS.map(([id, name, liveUrl, religion], i) => {
+  const demoUrl = LOCAL_DEMOS ? `http://127.0.0.1:${5101 + i}/` : liveUrl;
   const collection = id[0] as CollectionTier;
   return {
     id,

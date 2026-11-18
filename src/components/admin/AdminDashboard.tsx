@@ -473,7 +473,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ isOpen, onClose 
                           <input
                             type="url"
                             required
-                            placeholder="https://your-template.vercel.app"
+                            placeholder="https://your-template.pages.dev"
                             value={newTplDemoUrl}
                             onChange={(e) => setNewTplDemoUrl(e.target.value)}
                             className="w-full px-3 py-1.5 rounded-lg border border-[#C6A16B]/30 text-xs"

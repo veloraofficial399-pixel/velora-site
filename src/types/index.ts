@@ -17,7 +17,7 @@ export interface WeddingTemplate {
   id: string; // Design code shown to clients, e.g. 'A1' (number = rank within its collection, 1 = best)
   collection: CollectionTier;
   collectionName: string;
-  name: string; // Couple names e.g. "Erfana & Sukail" — used for search/admin only, never shown on cards
+  name: string; // Couple names e.g. "Afreen & Sameer" — used for search/admin only, never shown on cards
   price: number;
   religion?: Religion;
   category: TemplateCategory[];

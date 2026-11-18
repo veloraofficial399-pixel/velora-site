@@ -5,6 +5,8 @@
  *
  *   node scripts/record-previews.mjs          # record all designs
  *   node scripts/record-previews.mjs A1 C3    # record only these codes
+ *   node scripts/record-previews.mjs --local  # record the demo sites running on this Mac (ports from
+ *                                             # <TEMPLATES_DIR>/_review/rows.json) instead of the URLs in templates.ts
  *
  * Needs Google Chrome and ffmpeg. Output: public/previews/<CODE>.mp4 (540×960, for the grid cards)
  * and <CODE>.jpg (poster of the closed invitation).
@@ -32,14 +34,61 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const OVERRIDES = {
   B1: { wait: 6000 }, // heavy background image; the button ignores taps until it has loaded
   B2: { wait: 6000 }, // long fade-in intro
-  B6: { tap: [0.5, 0.6] }, // the ribbon, not the hint text below it
+  B6: { jsClick: '.ribbon-btn' }, // the ribbon bow button: a real touch doesn't reach it, a DOM click does
   D5: { tap: [0.5, 0.44] }, // the wax seal
+  E1: { wait: 5000 }, // ticket page wires its click handler late
+  E3: { wait: 4000 },
+  A3: { tap: [0.5, 0.64] }, // the temple door's touch icon
+  A1: { hide: ['.skip-intro', 'button[aria-label*="sound" i]', 'button[aria-label*="skip" i]'] },
+  C1: { hide: ['button[aria-label*="skip" i]', '.skip', '.skip-opening', '.music-toggle', '.music-btn'] },
 };
+
+// Static stylesheet added to every page (no timers / scripts running while recording): hides music / sound / skip controls.
+// Per-design extra selectors: OVERRIDES[code].hide = ['.some-css-selector'].
+const HIDE_SELECTORS = [
+  'button[aria-label*="music" i]', 'button[aria-label*="sound" i]', 'button[aria-label*="mute" i]', 'button[aria-label*="audio" i]',
+  '[role=button][aria-label*="music" i]', '[role=button][aria-label*="sound" i]',
+  '#music-toggle', '#musicBtn', '#music-btn', '#musicToggle', '.music-toggle', '.music-fab', '.music-btn', '.music-button', '#rv-mute', '.mute-btn', '#mute-btn',
+  '.skip-intro', '.skip-btn', '#skip-btn', '#skipBtn', '#skip', '.skip', '.skip-button', '#skipIntro', '.intro-skip', '#audio-toggle', '.audio-toggle', '.sound-toggle',
+];
+const STYLE_SRC = (extra) => `(() => {
+  const css = ${JSON.stringify([...HIDE_SELECTORS].join(',\n'))} + ${JSON.stringify('')} + (${JSON.stringify(extra)}.length ? ',' + ${JSON.stringify(extra)}.join(',') : '');
+  const add = () => { if (!document.documentElement || document.getElementById('__rec_hide')) return; const st = document.createElement('style'); st.id = '__rec_hide'; st.textContent = css + '{visibility:hidden!important}'; document.documentElement.appendChild(st); };
+  add(); document.addEventListener('DOMContentLoaded', add);
+})();`;
+
+// (older approach, unused) Runs inside every page: hides small floating controls (music toggles, "Sound on", "Skip intro", "Pause music"...).
+// Never touches the big "open invitation" buttons. Per-design extra selectors: OVERRIDES[code].hide = ['.some-css-selector'].
+const CLEANUP = (extra) => `(() => {
+  const BAD = /^(skip( [a-z]+)?|sound( on| off)?|music( on| off)?|mute|unmute|pause music|play music|pause|play)\\s*[↗›>▶⏵]?$/i;
+  const LABEL = /(music|sound|mute|audio|skip)/i;
+  const extra = ${JSON.stringify(extra)};
+  const hide = () => {
+    for (const el of document.querySelectorAll('button, a, [role=button], div, span')) {
+      const r = el.getBoundingClientRect();
+      if (r.width > 190 || r.height > 90 || r.width < 8) continue;
+      const cs = getComputedStyle(el);
+      const floating = cs.position === 'fixed' || cs.position === 'absolute' || cs.position === 'sticky' || el.matches('button, [role=button], a');
+      const text = (el.innerText || '').trim();
+      if (/(open|begin|enter|start|unveil|reveal|untie|tap to|click to|view)/i.test(text) && !BAD.test(text)) continue;
+      const label = el.getAttribute('aria-label') || el.getAttribute('title') || '';
+      if (floating && ((text.length < 22 && BAD.test(text)) || (label && LABEL.test(label) && el.matches('button, [role=button], a')))) el.style.setProperty('visibility', 'hidden', 'important');
+    }
+    for (const sel of extra) document.querySelectorAll(sel).forEach((e) => e.style.setProperty('visibility', 'hidden', 'important'));
+  };
+  hide();
+})();`;
 
 // Read [code, name, url] rows from the template data file.
 const source = readFileSync(join(ROOT, 'src', 'data', 'templates.ts'), 'utf8');
 let designs = [...source.matchAll(/\['([A-Z]\d+)',\s*'[^']*',\s*'(https?:\/\/[^']+)'/g)].map((m) => ({ code: m[1], url: m[2] }));
-const only = process.argv.slice(2).map((s) => s.toUpperCase());
+const only = process.argv.slice(2).filter((s) => !s.startsWith('--')).map((s) => s.toUpperCase());
+if (process.argv.includes('--local')) {
+  const dir = process.env.TEMPLATES_DIR || join(ROOT, '..', '..', 'templates');
+  const rows = JSON.parse(readFileSync(join(dir, '_review', 'rows.json'), 'utf8'));
+  const port = Object.fromEntries(rows.map((r) => [r.code, r.port]));
+  designs = designs.map((d) => ({ ...d, url: `http://127.0.0.1:${port[d.code]}/` }));
+}
 if (only.length) designs = designs.filter((d) => only.includes(d.code));
 if (!designs.length) throw new Error('No designs found to record');
 mkdirSync(OUT, { recursive: true });
@@ -102,29 +151,72 @@ async function record({ code, url }) {
     await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: SCALE, mobile: true });
     await send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
     await send('Page.enable');
+    // Hide the template's own floating controls (music / sound / skip buttons) so the card shows only the invitation.
+    const clean = () => null; if (OVERRIDES[code]?.hide?.length) await send('Page.addScriptToEvaluateOnNewDocument', { source: STYLE_SRC(OVERRIDES[code].hide) });
+    const _unused = () => send('Runtime.evaluate', { expression: process.argv.includes('--clean-noop') ? '0' : CLEANUP(OVERRIDES[code]?.hide || []) });
     await send('Page.navigate', { url });
-    await sleep(6000 + (OVERRIDES[code]?.wait ?? 0)); // let fonts, images and intro animations settle
+    // wait for every image/video/script to finish loading (big templates need >6 s), then let intro animations settle
+    for (let i = 0; i < 60; i++) {
+      const ready = (await send('Runtime.evaluate', { expression: "document.readyState === 'complete'", returnByValue: true })).result?.value;
+      if (ready) break;
+      await sleep(500);
+    }
+    await sleep(4500 + (OVERRIDES[code]?.wait ?? 0));
 
     // Capture fixed-size frames continuously, stamped with wall-clock time.
     let capturing = true;
+    let paused = false; // capture stops while we retry a tap, so a heavy page gets the CPU it needs
     const capture = (async () => {
       while (capturing) {
+        if (paused) { await sleep(25); continue; }
         const t = Date.now() / 1000;
         const shot = await send('Page.captureScreenshot', { format: 'jpeg', quality: 90, optimizeForSpeed: true });
         if (shot.data) frames.push({ data: shot.data, t });
       }
     })();
 
+    await clean();
     await sleep(1500); // show the closed invitation first
     const btn = (await send('Runtime.evaluate', { expression: FIND_OPEN_BUTTON, returnByValue: true })).result?.value;
-    const manual = OVERRIDES[code]?.tap;
+    let manual = OVERRIDES[code]?.tap;
+    if (OVERRIDES[code]?.tapSelector) {
+      const c = (await send('Runtime.evaluate', { returnByValue: true, expression: `(() => { const e = document.querySelector(${JSON.stringify(OVERRIDES[code].tapSelector)}); if (!e) return null; const r = e.getBoundingClientRect(); return JSON.stringify([(r.left + r.width / 2) / innerWidth, (r.top + r.height / 2) / innerHeight]); })()` })).result?.value;
+      if (c) manual = JSON.parse(c);
+    }
     const target = manual
       ? { x: W * manual[0], y: H * manual[1], text: '(manual tap point)' }
       : btn ? JSON.parse(btn) : { x: W / 2, y: H * 0.75, text: '(centre tap)' };
-    await tap(send, target.x, target.y);
-    await sleep(3000); // opening animation
+    const sizeBefore = frames.length ? frames[frames.length - 1].data.length : 0;
+    if (OVERRIDES[code]?.jsClick) {
+      await send('Runtime.evaluate', { expression: `document.querySelector(${JSON.stringify(OVERRIDES[code].jsClick)})?.click()` });
+    } else {
+      await tap(send, target.x, target.y);
+    }
+    // Some pages wire their click handler late: if the invitation is still closed, pause capture and tap again (max 4 times)
+    const stillClosed = async () => {
+      if (manual) { const n = frames.length ? frames[frames.length - 1].data.length : 0; return Math.abs(n - sizeBefore) / Math.max(1, sizeBefore) < 0.012; }
+      const again = (await send('Runtime.evaluate', { expression: FIND_OPEN_BUTTON, returnByValue: true })).result?.value;
+      const op = (await send('Runtime.evaluate', { returnByValue: true, expression: `(() => { const els=[...document.querySelectorAll('button,a,[role=button],div,span,p')].filter(e=>/(open|tap|begin|enter|click|untie)/i.test(e.innerText||'')&&(e.innerText||'').length<60); return els.length? Math.max(...els.map(e=>+getComputedStyle(e).opacity||0)) : 0 })()` })).result?.value;
+      return again && op >= 0.9 ? JSON.parse(again) : false;
+    };
+    await sleep(1200);
+    let closed = OVERRIDES[code]?.jsClick ? false : await stillClosed();
+    if (closed) {
+      paused = true;
+      for (let retry = 0; retry < 4 && closed; retry++) {
+        console.log(`  ${code}: still closed, tapping again`);
+        const p = manual ? target : closed;
+        await sleep(500);
+        await tap(send, p.x, p.y);
+        await sleep(1400);
+        closed = await stillClosed();
+      }
+      paused = false;
+    }
+    for (const wait of [800, 1200, 1000]) { await sleep(wait); await clean(); } // opening animation; controls appear after the tap
 
     // Smooth wheel scrolling (works for window and inner scroll containers), paced by elapsed time.
+    await clean();
     const start = Date.now();
     let last = start;
     while (Date.now() - start < SCROLL_MS) {
@@ -146,7 +238,8 @@ async function record({ code, url }) {
       const file = join(dir, `${String(i).padStart(5, '0')}.jpg`);
       writeFileSync(file, Buffer.from(f.data, 'base64'));
       const next = frames[i + 1]?.t ?? f.t + 0.5;
-      list += `file '${file}'\nduration ${Math.max(0.02, next - f.t).toFixed(3)}\n`;
+      const gap = next - f.t;
+      list += `file '${file}'\nduration ${Math.max(0.02, gap > 0.6 ? 0.08 : gap).toFixed(3)}\n`;
     });
     list += `file '${join(dir, `${String(frames.length - 1).padStart(5, '0')}.jpg`)}'\n`;
     writeFileSync(join(dir, 'list.txt'), list);
