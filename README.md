@@ -39,13 +39,13 @@ VELORA features 30 fully interactive wedding website templates with real live Ve
 - **A3. Karthik & Nandhini**: [https://velora-demo-a3.pages.dev](https://velora-demo-a3.pages.dev) *(Hindu Wedding, Minimal)*
 - **A4. Divya & Nikhil**: [https://velora-demo-a4.pages.dev](https://velora-demo-a4.pages.dev) *(Hindu Wedding, Floral)*
 - **A5. Fahad & Hiba**: [https://velora-demo-a5.pages.dev](https://velora-demo-a5.pages.dev) *(Muslim Wedding, Traditional)*
-- **A6. Aparna & Abhijith**: [https://velora-demo-a6.velora-official399.workers.dev](https://velora-demo-a6.velora-official399.workers.dev) *(Hindu Wedding, Modern)*
+- **A6. Aparna & Abhijith**: [https://velora-demo-a6.velorain.workers.dev](https://velora-demo-a6.velorain.workers.dev) *(Hindu Wedding, Modern)*
 
 ### 💎 Collection B – ₹799 (Classic)
 - **B1. Umesh & Neethu**: [https://velora-demo-b1.pages.dev](https://velora-demo-b1.pages.dev) *(Traditional, Modern)*
 - **B2. Askar & Nasiba**: [https://velora-demo-b2.pages.dev](https://velora-demo-b2.pages.dev) *(Muslim Wedding, Luxury)*
 - **B3. Joel & Annie**: [https://velora-demo-b3.pages.dev](https://velora-demo-b3.pages.dev) *(Christian Wedding, Minimal)*
-- **B4. Sahla & Shihabudheen**: [https://velora-demo-b4.velora-official399.workers.dev](https://velora-demo-b4.velora-official399.workers.dev) *(Muslim Wedding, Floral)*
+- **B4. Sahla & Shihabudheen**: [https://velora-demo-b4.velorain.workers.dev](https://velora-demo-b4.velorain.workers.dev) *(Muslim Wedding, Floral)*
 - **B5. Vikram & Ishita**: [https://velora-demo-b5.pages.dev](https://velora-demo-b5.pages.dev) *(Hindu Wedding, Luxury)*
 - **B6. Pranjal & Ananya**: [https://velora-demo-b6.pages.dev](https://velora-demo-b6.pages.dev) *(Minimal, Traditional)*
 
@@ -53,25 +53,25 @@ VELORA features 30 fully interactive wedding website templates with real live Ve
 - **C1. Jacob & Sneha**: [https://velora-demo-c1.pages.dev](https://velora-demo-c1.pages.dev) *(Christian Wedding, Floral)*
 - **C2. Bestin & Mareena**: [https://velora-demo-c2.pages.dev](https://velora-demo-c2.pages.dev) *(Christian Wedding, Luxury)*
 - **C3. Nibin & Asha**: [https://velora-demo-c3.pages.dev](https://velora-demo-c3.pages.dev) *(Christian Wedding, Floral)*
-- **C4. Vigneshwar & Nithyasri**: [https://velora-demo-c4.velora-official399.workers.dev](https://velora-demo-c4.velora-official399.workers.dev) *(Hindu Wedding, Traditional)*
+- **C4. Vigneshwar & Nithyasri**: [https://velora-demo-c4.velorain.workers.dev](https://velora-demo-c4.velorain.workers.dev) *(Hindu Wedding, Traditional)*
 - **C5. Gokul & Greeshma**: [https://velora-demo-c5.pages.dev](https://velora-demo-c5.pages.dev) *(Hindu Wedding, Modern)*
 - **C6. Karthikeyan & Harini**: [https://velora-demo-c6.pages.dev](https://velora-demo-c6.pages.dev) *(Hindu Wedding, Luxury)*
 
 ### 💎 Collection D – ₹1,499 (Luxury Haute)
 - **D1. Arshad & Shifna**: [https://velora-demo-d1.pages.dev](https://velora-demo-d1.pages.dev) *(Muslim Wedding, Luxury)*
-- **D2. Ayesha & Sajjad**: [https://velora-demo-d2.velora-official399.workers.dev](https://velora-demo-d2.velora-official399.workers.dev) *(Muslim Wedding, Floral)*
+- **D2. Ayesha & Sajjad**: [https://velora-demo-d2.velorain.workers.dev](https://velora-demo-d2.velorain.workers.dev) *(Muslim Wedding, Floral)*
 - **D3. Aarav & Ananya**: [https://velora-demo-d3.pages.dev](https://velora-demo-d3.pages.dev) *(Hindu Wedding, Luxury)*
 - **D4. Imran & Mehnaz**: [https://velora-demo-d4.pages.dev](https://velora-demo-d4.pages.dev) *(Muslim Wedding, Royal)*
 - **D5. Rohit & Ritika**: [https://velora-demo-d5.pages.dev](https://velora-demo-d5.pages.dev) *(Hindu Wedding, Floral)*
-- **D6. Rohit & Tania**: [https://velora-demo-d6.velora-official399.workers.dev](https://velora-demo-d6.velora-official399.workers.dev) *(Modern, Luxury)*
+- **D6. Rohit & Tania**: [https://velora-demo-d6.velorain.workers.dev](https://velora-demo-d6.velorain.workers.dev) *(Modern, Luxury)*
 
 ### 💎 Collection E – ₹1,999 (Bespoke Exclusive)
 - **E1. Siddharth & Lakshmi Priya**: [https://velora-demo-e1.pages.dev](https://velora-demo-e1.pages.dev) *(Traditional, Royal)*
-- **E2. Nithin & Daya**: [https://velora-demo-e2.velora-official399.workers.dev](https://velora-demo-e2.velora-official399.workers.dev) *(Hindu Wedding, Luxury)*
-- **E3. Kumaran & Thanusha**: [https://velora-demo-e3.velora-official399.workers.dev](https://velora-demo-e3.velora-official399.workers.dev) *(Cross-Cultural Luxury)*
-- **E4. Akash & Sukanya**: [https://velora-demo-e4.velora-official399.workers.dev](https://velora-demo-e4.velora-official399.workers.dev) *(Enchanted Floral)*
-- **E5. Nafeesa & Sofian**: [https://velora-demo-e5.velora-official399.workers.dev](https://velora-demo-e5.velora-official399.workers.dev) *(Muslim Wedding, Royal)*
-- **E6. Naadham & Rishi**: [https://velora-demo-e6.velora-official399.workers.dev](https://velora-demo-e6.velora-official399.workers.dev) *(Music Symphony Theme)*
+- **E2. Nithin & Daya**: [https://velora-demo-e2.velorain.workers.dev](https://velora-demo-e2.velorain.workers.dev) *(Hindu Wedding, Luxury)*
+- **E3. Kumaran & Thanusha**: [https://velora-demo-e3.velorain.workers.dev](https://velora-demo-e3.velorain.workers.dev) *(Cross-Cultural Luxury)*
+- **E4. Akash & Sukanya**: [https://velora-demo-e4.velorain.workers.dev](https://velora-demo-e4.velorain.workers.dev) *(Enchanted Floral)*
+- **E5. Nafeesa & Sofian**: [https://velora-demo-e5.velorain.workers.dev](https://velora-demo-e5.velorain.workers.dev) *(Muslim Wedding, Royal)*
+- **E6. Naadham & Rishi**: [https://velora-demo-e6.velorain.workers.dev](https://velora-demo-e6.velorain.workers.dev) *(Music Symphony Theme)*
 
 ---
 
