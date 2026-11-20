@@ -11,6 +11,20 @@ export const PHONE_HEIGHT = 693; // 9:16 story
 export const previewVideo = (t: WeddingTemplate) => `/previews/${t.id}.mp4?v=${__BUILD_ID__}`;
 export const previewPoster = (t: WeddingTemplate) => `/previews/${t.id}.jpg?v=${__BUILD_ID__}`;
 
+/**
+ * Apple devices (every iPhone/iPad browser, and Safari on Mac). Some of them won't play a video unless the
+ * server sends it in pieces (byte ranges), which our hosting doesn't do. If a card's video hasn't started
+ * on one of these after a few seconds, it is downloaded whole and played from memory instead.
+ */
+const IS_APPLE_WEBKIT = (() => {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent;
+  const iOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const macSafari = /Safari/.test(ua) && /Macintosh/.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(ua);
+  return iOS || macSafari;
+})();
+const STALL_MS = 4000;
+
 interface LiveStoryCardProps {
   template: WeddingTemplate;
   onOpen: (template: WeddingTemplate) => void;
@@ -30,13 +44,23 @@ export const LiveStoryCard: React.FC<LiveStoryCardProps> = ({ template, onOpen, 
   const [isVisible, setIsVisible] = useState(false);
   const [noVideo, setNoVideo] = useState(false);
   const [scale, setScale] = useState(0);
+  // Apple fallback: play from a downloaded copy (blob) instead of streaming.
+  const [useBlob, setUseBlob] = useState(false);
+  const [blobSrc, setBlobSrc] = useState<string | null>(null);
+  const [inRange, setInRange] = useState(priority); // within ~800px of the screen right now
   const isSignature = getRank(template) === 1;
 
   // Load when close to the screen; only play while actually on screen.
   useEffect(() => {
     const el = frameRef.current;
     if (!el) return;
-    const near = new IntersectionObserver(([e]) => e.isIntersecting && setIsNear(true), { rootMargin: '800px 0px' });
+    const near = new IntersectionObserver(
+      ([e]) => {
+        setInRange(e.isIntersecting);
+        if (e.isIntersecting) setIsNear(true);
+      },
+      { rootMargin: '800px 0px' }
+    );
     const seen = new IntersectionObserver(([e]) => setIsVisible(e.isIntersecting), { threshold: 0.15 });
     near.observe(el);
     seen.observe(el);
@@ -56,7 +80,48 @@ export const LiveStoryCard: React.FC<LiveStoryCardProps> = ({ template, onOpen, 
     } else {
       v.pause();
     }
-  }, [isVisible, isNear]);
+  }, [isVisible, isNear, blobSrc]);
+
+  // Apple only: if the video hasn't started a few seconds after the card is on screen, switch to the downloaded copy.
+  useEffect(() => {
+    if (!IS_APPLE_WEBKIT || useBlob || noVideo || !isVisible || !isNear) return;
+    const timer = setTimeout(() => {
+      const v = videoRef.current;
+      if (v && v.readyState < 2 /* no frame to show yet */) setUseBlob(true);
+    }, STALL_MS);
+    return () => clearTimeout(timer);
+  }, [isVisible, isNear, useBlob, noVideo]);
+
+  // Download the copy while the card is near the screen; free the memory again when it is scrolled far away.
+  useEffect(() => {
+    if (!useBlob) return;
+    if (!inRange) {
+      setBlobSrc((cur) => {
+        if (cur) URL.revokeObjectURL(cur);
+        return null;
+      });
+      return;
+    }
+    if (blobSrc) return;
+    const ctrl = new AbortController();
+    fetch(previewVideo(template), { signal: ctrl.signal })
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.blob();
+      })
+      .then((b) => setBlobSrc(URL.createObjectURL(b.type ? b : new Blob([b], { type: 'video/mp4' }))))
+      .catch((e) => {
+        if (e?.name !== 'AbortError') setNoVideo(true);
+      });
+    return () => ctrl.abort();
+  }, [useBlob, inRange, blobSrc, template]);
+
+  // Free the downloaded copy when the card goes away.
+  const blobRef = useRef<string | null>(null);
+  blobRef.current = blobSrc;
+  useEffect(() => () => {
+    if (blobRef.current) URL.revokeObjectURL(blobRef.current);
+  }, []);
 
   // Fallback only: scale the live site to the card width.
   useEffect(() => {
@@ -80,13 +145,17 @@ export const LiveStoryCard: React.FC<LiveStoryCardProps> = ({ template, onOpen, 
         {!noVideo ? (
           <video
             ref={videoRef}
-            src={isNear ? previewVideo(template) : undefined}
+            src={!isNear ? undefined : useBlob ? blobSrc ?? undefined : previewVideo(template)}
             poster={previewPoster(template)}
             muted
             loop
             playsInline
             preload={priority ? 'auto' : 'metadata'}
-            onError={() => setNoVideo(true)}
+            onError={() => {
+              if (useBlob && !blobSrc) return; // switching to the downloaded copy
+              if (IS_APPLE_WEBKIT && !useBlob) setUseBlob(true); // Apple: try the downloaded copy first
+              else setNoVideo(true);
+            }}
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover"
           />
