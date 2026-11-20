@@ -30,10 +30,9 @@ const ROWS: [string, string, string, Religion][] = [
   ['B3', 'Askar & Nasiba', 'https://velora-demo-b2.pages.dev', 'Muslim'],
   ['B4', 'Najiya & Faiz', 'https://velora-demo-n12.velorain.workers.dev', 'Muslim'],
   ['B5', 'Joel & Annie', 'https://velora-demo-b3.pages.dev', 'Christian'],
-  ['B6', 'Rayan & Mehreen', 'https://velora-demo-n08.velorain.workers.dev', 'Muslim'],
-  ['B7', 'Sahla & Shihabudheen', 'https://velora-demo-b4.velorain.workers.dev', 'Muslim'],
-  ['B8', 'Vikram & Ishita', 'https://velora-demo-b5.pages.dev', 'Hindu'],
-  ['B9', 'Pranjal & Ananya', 'https://velora-demo-b6.pages.dev', 'Hindu'],
+  ['B6', 'Sahla & Shihabudheen', 'https://velora-demo-b4.velorain.workers.dev', 'Muslim'],
+  ['B7', 'Vikram & Ishita', 'https://velora-demo-b5.pages.dev', 'Hindu'],
+  ['B8', 'Pranjal & Ananya', 'https://velora-demo-b6.pages.dev', 'Hindu'],
 
   ['C1', 'Varun & Devika', 'https://velora-demo-n02.velorain.workers.dev', 'Hindu'],
   ['C2', 'Jacob & Sneha', 'https://velora-demo-c1.pages.dev', 'Christian'],
@@ -52,6 +51,7 @@ const ROWS: [string, string, string, Religion][] = [
   ['D6', 'Imran & Mehnaz', 'https://velora-demo-d4.pages.dev', 'Muslim'],
   ['D7', 'Rohit & Ritika', 'https://velora-demo-d5.pages.dev', 'Hindu'],
   ['D8', 'Rohit & Tania', 'https://velora-demo-d6.velorain.workers.dev', 'Hindu'],
+  ['D9', 'Rayan & Mehreen', 'https://velora-demo-n08.velorain.workers.dev', 'Muslim'],
 
   ['E1', 'Farhan & Aaliya', 'https://velora-demo-n04.velorain.workers.dev', 'Muslim'],
   ['E2', 'Siddharth & Lakshmi Priya', 'https://velora-demo-e1.pages.dev', 'Hindu'],

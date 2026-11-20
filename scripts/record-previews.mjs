@@ -40,7 +40,7 @@ const OVERRIDES = {
   E3: { tap: [0.5, 0.5] }, // DA monogram envelope
   B1: { wait: 6000 }, // heavy background image; the button ignores taps until it has loaded
   B3: { wait: 6000 }, // long fade-in intro
-  B9: { jsClick: '.ribbon-btn' }, // the ribbon bow button: a real touch doesn't reach it, a DOM click does
+  B8: { jsClick: '.ribbon-btn' }, // the ribbon bow button: a real touch doesn't reach it, a DOM click does
   D7: { tap: [0.5, 0.44] }, // the wax seal
   E2: { wait: 5000 }, // ticket page wires its click handler late
   E5: { wait: 4000 },
