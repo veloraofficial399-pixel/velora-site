@@ -283,9 +283,10 @@ export const TemplatesPage: React.FC<TemplatesPageProps> = ({ openCode }) => {
         )}
       </AnimatePresence>
 
-      {/* Welcome on every page load: a man peeks in from the top-right edge, says hi, and slips back out (~3s) */}
+      {/* Welcome on every page load: a man peeks in from the top-right edge, says hi, and slips back out.
+          Stays ~10s so the message can be read comfortably; tapping the bubble closes it sooner. */}
       {showWelcome && !openTemplate && (
-        <PeekingMan onDone={dismissWelcome}>
+        <PeekingMan onDone={dismissWelcome} seconds={10}>
           <p className="font-serif text-[15px] sm:text-base text-[#E4C78F] leading-tight whitespace-nowrap">Welcome to VELORA ✨</p>
           <p className="text-[11px] sm:text-xs text-[#EFE5D8]/90 leading-snug mt-0.5">
             Every card is live. <strong className="text-white">Tap a design</strong> to try it, then{' '}

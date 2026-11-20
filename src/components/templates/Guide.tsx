@@ -14,10 +14,25 @@ export const onceFlag = {
   },
 };
 
-/** Total time on screen: lean in, wave hi, slip back out. */
+/** Default time on screen (seconds): lean in, wave hi, slip back out. */
 const PEEK_SECONDS = 6;
-const T_IN = 0.08; // fully leaned in
-const T_OUT = 0.9; // starts leaving (≈4.5s fully visible so the message can be read)
+
+/**
+ * Keyframe times for a peek of `total` seconds. Leaning in, the wave and leaving always take the same
+ * real time; a longer peek only makes the pause in the middle longer (more time to read the bubble).
+ */
+const peekTimes = (total: number) => {
+  const at = (sec: number) => Math.min(1, Math.max(0, sec / total));
+  const leave = total - 0.6; // starts slipping back out
+  return {
+    // bubble: hidden → pops in → stays → fades out as he leaves
+    bubble: [0, at(0.6), at(0.9), at(leave - 0.06), at(leave + 0.24)],
+    // man: in → settle → two slow head bobs → out
+    man: [0, at(0.38), at(0.72), at(total * 0.4), at(total * 0.65), at(leave), 1],
+    // hand: a wave right after arriving, a smaller one later, then still
+    hand: [0, at(0.48), at(0.9), at(1.26), at(1.62), at(1.98), at(2.34), at(2.7), at(total * 0.62), at(total * 0.7), at(total * 0.78), 1],
+  };
+};
 
 /**
  * Anime-style guide (illustration in public/guide, generated in Figma): he leans in from the screen edge
@@ -30,8 +45,11 @@ export const PeekingMan: React.FC<{
   side?: 'left' | 'right';
   /** extra classes for the fixed wrapper (position / z-index) */
   className?: string;
-}> = ({ onDone, children, side = 'right', className = 'top-[58px] sm:top-[66px] z-40' }) => {
+  /** total time on screen in seconds (a tap on the bubble closes it sooner) */
+  seconds?: number;
+}> = ({ onDone, children, side = 'right', className = 'top-[58px] sm:top-[66px] z-40', seconds = PEEK_SECONDS }) => {
   const left = side === 'left';
+  const times = peekTimes(seconds);
   const m = left ? -1 : 1; // mirror factor for horizontal motion
   return (
     <div
@@ -46,7 +64,7 @@ export const PeekingMan: React.FC<{
         style={{ transformOrigin: left ? 'top left' : 'top right' }}
         initial={{ opacity: 0, scale: 0.4, x: 12 * m }}
         animate={{ opacity: [0, 0, 1, 1, 0], scale: [0.4, 0.4, 1.06, 1, 0.6], x: [12 * m, 12 * m, 0, 0, 16 * m] }}
-        transition={{ duration: PEEK_SECONDS, times: [0, T_IN + 0.02, T_IN + 0.07, T_OUT - 0.01, T_OUT + 0.04], ease: 'easeOut' }}
+        transition={{ duration: seconds, times: times.bubble, ease: 'easeOut' }}
       >
         {children}
         <span
@@ -72,8 +90,8 @@ export const PeekingMan: React.FC<{
           rotate: [16, -7, -3, -6, -2, -4, 16].map((r) => r * m),
         }}
         transition={{
-          duration: PEEK_SECONDS,
-          times: [0, T_IN * 0.8, T_IN + 0.04, 0.4, 0.65, T_OUT, 1],
+          duration: seconds,
+          times: times.man,
           ease: ['easeOut', 'easeInOut', 'easeInOut', 'easeInOut', 'linear', 'easeIn'],
         }}
         onAnimationComplete={onDone}
@@ -89,7 +107,7 @@ export const PeekingMan: React.FC<{
             className="absolute inset-0 w-full h-full select-none"
             style={{ originX: 0.368, originY: 0.824 }}
             animate={{ rotate: [0, 0, -16, 10, -16, 10, -4, 0, -10, 6, 0, 0] }}
-            transition={{ duration: PEEK_SECONDS, times: [0, T_IN, 0.15, 0.21, 0.27, 0.33, 0.39, 0.45, 0.62, 0.7, 0.78, 1], ease: 'easeInOut' }}
+            transition={{ duration: seconds, times: times.hand, ease: 'easeInOut' }}
           />
         </div>
       </motion.div>
