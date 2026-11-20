@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search, MessageCircle, X, ArrowLeft, ChevronDown } from 'lucide-react';
+import { Search, MessageCircle, X, ArrowLeft, ChevronDown, Share2, Check } from 'lucide-react';
 import { useStore } from '../../context/StoreContext';
 import { Religion, WeddingTemplate } from '../../types';
 import { COLLECTIONS, formatPrice, sortFeaturedMix } from '../../data/templates';
@@ -9,6 +9,8 @@ import { BrandLogo } from '../common/BrandLogo';
 import { LiveStoryCard } from './LiveStoryCard';
 import { TemplateFullscreen } from './TemplateFullscreen';
 import { PeekingMan, onceFlag } from './Guide';
+import { TemplatesWhatsApp } from './TemplatesWhatsApp';
+import { shareLink } from '../../lib/share';
 
 const WELCOME_KEY = 'velora_welcome_seen_v1';
 
@@ -100,6 +102,20 @@ export const TemplatesPage: React.FC<TemplatesPageProps> = ({ openCode }) => {
     }
   }, []);
 
+  // Header "Share" (WhatsApp is the floating button bottom-right): send this page to family.
+  const [copied, setCopied] = useState(false);
+  const sharePage = async () => {
+    const result = await shareLink(
+      `${window.location.origin}/templates`,
+      'VELORA · live wedding invitation designs',
+      'Have a look at these wedding invitation designs from VELORA — each one is live, tap to try it:'
+    );
+    if (result === 'copied') {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2200);
+    }
+  };
+
   const hasFilters = price !== null || religion !== null || query !== '' || sort !== 'best';
   const clearFilters = () => {
     setPrice(null);
@@ -116,15 +132,15 @@ export const TemplatesPage: React.FC<TemplatesPageProps> = ({ openCode }) => {
           <button type="button" onClick={() => navigate('/')} aria-label="VELORA home">
             <BrandLogo size="sm" />
           </button>
-          <a
-            href={getWhatsAppLink('Hi Velora! I am looking at your wedding invitation designs.')}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={sharePage}
+            aria-label="Share these designs"
             className="btn-shine btn-glow-dark relative overflow-hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs uppercase tracking-wider font-medium bg-[#34251D] text-[#F8F3EC] hover:bg-[#C6A16B] transition-colors"
           >
-            <MessageCircle className="w-3.5 h-3.5 text-[#C6A16B]" />
-            WhatsApp
-          </a>
+            {copied ? <Check className="w-3.5 h-3.5 text-[#C6A16B]" /> : <Share2 className="w-3.5 h-3.5 text-[#C6A16B]" />}
+            {copied ? 'Link copied' : 'Share'}
+          </button>
         </div>
       </header>
 
@@ -294,6 +310,9 @@ export const TemplatesPage: React.FC<TemplatesPageProps> = ({ openCode }) => {
           </p>
         </PeekingMan>
       )}
+
+      {/* WhatsApp chat button (hidden in the full-screen view, which has its own Book button) */}
+      {!openTemplate && <TemplatesWhatsApp />}
 
       {openTemplate && (
         <TemplateFullscreen template={openTemplate} list={browseList} onChange={change} onClose={close} />
