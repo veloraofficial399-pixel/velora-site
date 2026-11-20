@@ -38,15 +38,19 @@ const DEFAULT_SETTINGS: SiteSettings = {
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Templates state (12 curated templates)
-  const [templates, setTemplates] = useState<WeddingTemplate[]>(() => {
+  // Templates always come from the code (src/data/templates.ts), never from the browser's storage:
+  // a saved copy would hide new designs and could pair a card's preview with a different design.
+  // Admin edits stay in memory for the current visit only.
+  const [templates, setTemplates] = useState<WeddingTemplate[]>(INITIAL_TEMPLATES);
+  useEffect(() => {
     try {
-      const saved = localStorage.getItem('velora_templates_v5');
-      return saved ? JSON.parse(saved) : INITIAL_TEMPLATES;
+      ['velora_templates', 'velora_templates_v2', 'velora_templates_v4', 'velora_templates_v5'].forEach((k) =>
+        localStorage.removeItem(k)
+      );
     } catch {
-      return INITIAL_TEMPLATES;
+      /* storage unavailable */
     }
-  });
+  }, []);
 
   // Invitations state (6 curated types)
   const [invitations] = useState<DigitalInvitation[]>(() => {
@@ -101,14 +105,6 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [selectedOrderTemplate, setSelectedOrderTemplate] = useState<WeddingTemplate | null>(null);
 
   // Sync to local storage
-  useEffect(() => {
-    try {
-      localStorage.setItem('velora_templates_v5', JSON.stringify(templates));
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
-    }
-  }, [templates]);
-
   useEffect(() => {
     try {
       localStorage.setItem('velora_packages', JSON.stringify(packages));

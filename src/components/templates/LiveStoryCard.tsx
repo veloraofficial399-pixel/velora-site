@@ -7,8 +7,9 @@ import { formatPrice, getRank } from '../../data/templates';
 export const PHONE_WIDTH = 390;
 export const PHONE_HEIGHT = 693; // 9:16 story
 
-export const previewVideo = (t: WeddingTemplate) => `/previews/${t.id}.mp4`;
-export const previewPoster = (t: WeddingTemplate) => `/previews/${t.id}.jpg`;
+// ?v= changes with every build (previews are cached for a week, and codes can be renumbered between deploys).
+export const previewVideo = (t: WeddingTemplate) => `/previews/${t.id}.mp4?v=${__BUILD_ID__}`;
+export const previewPoster = (t: WeddingTemplate) => `/previews/${t.id}.jpg?v=${__BUILD_ID__}`;
 
 interface LiveStoryCardProps {
   template: WeddingTemplate;

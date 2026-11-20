@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { StoreProvider } from './context/StoreContext';
 import { Navbar } from './components/layout/Navbar';
 import { Hero } from './components/home/Hero';
@@ -10,11 +10,15 @@ import { AboutPage } from './components/about/AboutPage';
 import { TestimonialsSection } from './components/home/TestimonialsSection';
 import { ContactSection } from './components/contact/ContactSection';
 import { Footer } from './components/layout/Footer';
-import { AdminDashboard } from './components/admin/AdminDashboard';
 import { FloatingWhatsApp } from './components/common/FloatingWhatsApp';
 import { PageLoader } from './components/common/PageLoader';
 import { TemplatesPage } from './components/templates/TemplatesPage';
 import { matchTemplatesRoute, navigate, usePathname } from './lib/router';
+
+// Owner-only panel: downloaded only when opened, so visitors get a smaller first load.
+const AdminDashboard = lazy(() =>
+  import('./components/admin/AdminDashboard').then((m) => ({ default: m.AdminDashboard }))
+);
 
 const HomePage: React.FC = () => {
   const [activeSection, setActiveSection] = useState('home');
@@ -111,10 +115,11 @@ const HomePage: React.FC = () => {
       />
 
       {/* OWNER CONTENT MANAGEMENT SYSTEM */}
-      <AdminDashboard
-        isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
-      />
+      {isAdminOpen && (
+        <Suspense fallback={null}>
+          <AdminDashboard isOpen onClose={() => setIsAdminOpen(false)} />
+        </Suspense>
+      )}
 
       {/* FLOATING WHATSAPP BUTTON (Always 1-Tap Ready) */}
       <FloatingWhatsApp />

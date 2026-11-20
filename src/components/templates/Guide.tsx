@@ -39,9 +39,10 @@ export const PeekingMan: React.FC<{
       role="status"
       aria-live="polite"
     >
-      {/* speech bubble, next to his face */}
+      {/* speech bubble, next to his face (a tap closes it, so it never blocks the controls underneath) */}
       <motion.div
-        className={`pointer-events-auto relative mt-6 sm:mt-8 ${left ? '-ml-1 rounded-tl-sm' : '-mr-1 rounded-tr-sm'} w-[200px] sm:w-[230px] rounded-2xl bg-gradient-to-br from-[#3A2A20] to-[#231812] border border-[#C6A16B]/60 shadow-2xl shadow-black/30 px-3.5 py-2.5 z-10`}
+        onClick={onDone}
+        className={`pointer-events-auto cursor-pointer relative mt-6 sm:mt-8 ${left ? '-ml-1 rounded-tl-sm' : '-mr-1 rounded-tr-sm'} w-[200px] sm:w-[230px] rounded-2xl bg-gradient-to-br from-[#3A2A20] to-[#231812] border border-[#C6A16B]/60 shadow-2xl shadow-black/30 px-3.5 py-2.5 z-10`}
         style={{ transformOrigin: left ? 'top left' : 'top right' }}
         initial={{ opacity: 0, scale: 0.4, x: 12 * m }}
         animate={{ opacity: [0, 0, 1, 1, 0], scale: [0.4, 0.4, 1.06, 1, 0.6], x: [12 * m, 12 * m, 0, 0, 16 * m] }}

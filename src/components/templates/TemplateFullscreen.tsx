@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useDragControls } from 'framer-motion';
-import { ChevronUp, ChevronDown, X, ExternalLink, Info, Crown, Sparkles, Hand, Clock, Wand2, Share2, Pointer } from 'lucide-react';
+import { ChevronUp, ChevronDown, X, ExternalLink, Info, Crown, Sparkles, Hand, Clock, Wand2, Share2, Pointer, Link2, Check } from 'lucide-react';
 import { WeddingTemplate } from '../../types';
 import { useStore } from '../../context/StoreContext';
 import { formatPrice, getRank } from '../../data/templates';
@@ -192,6 +192,29 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
     window.open(getWhatsAppLink(msg), '_blank');
   };
 
+  // Share this design (partner, family): the phone's share sheet, or copy the link on computers.
+  const [copied, setCopied] = useState(false);
+  const handleShare = async () => {
+    const url = `${window.location.origin}/templates/${t.id}`;
+    const title = `VELORA wedding invitation · design ${t.id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text: `${title} (${formatPrice(t.price)}) — see it live:`, url });
+        return;
+      } catch (e) {
+        if ((e as DOMException)?.name === 'AbortError') return; // closed the share sheet
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      window.prompt('Copy this link', url);
+      return;
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2200);
+  };
+
   const navBtn =
     'p-2 rounded-full bg-white/10 text-[#F8F3EC] hover:bg-white/20 disabled:opacity-30 disabled:hover:bg-white/10 transition-colors';
   const sideBtn =
@@ -296,10 +319,33 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
           <span className="px-2 py-0.5 rounded-full bg-[#8B1E2D] text-white text-xs font-semibold">{formatPrice(t.price)}</span>
           {isSignature && <Crown className="w-4 h-4 text-[#C6A16B]" aria-label="Best in plan" />}
         </div>
-        <span className="w-9 text-right text-xs text-[#EFE5D8]/60 tabular-nums">
-          {index + 1}/{list.length}
-        </span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-[#EFE5D8]/60 tabular-nums">
+            {index + 1}/{list.length}
+          </span>
+          <button type="button" onClick={handleShare} className={navBtn} aria-label={`Share design ${t.id}`}>
+            {copied ? <Check className="w-5 h-5 text-[#E4C78F]" /> : <Share2 className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
+
+      {/* "Link copied" toast (when the phone/computer has no share sheet) */}
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            role="status"
+            className="pointer-events-none fixed inset-x-0 top-14 md:top-6 z-[80] flex justify-center px-4"
+          >
+            <span className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#231812] border border-[#C6A16B]/60 text-[#F8F3EC] text-xs font-semibold whitespace-nowrap shadow-2xl shadow-black/40">
+              <Link2 className="w-3.5 h-3.5 text-[#E4C78F]" />
+              Link copied · send it to your family
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Live, interactive site: full screen on mobile, phone frame on laptop */}
       <div className="relative flex-1 min-h-0 w-full md:flex-none md:w-[390px] md:h-[min(844px,calc(100vh-4rem))] md:rounded-[36px] md:border-[6px] md:border-[#34251D] md:shadow-2xl overflow-hidden bg-[#1C130E]">
@@ -510,6 +556,14 @@ export const TemplateFullscreen: React.FC<TemplateFullscreenProps> = ({ template
             Open in new tab
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
+          <button
+            type="button"
+            onClick={handleShare}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-full border border-white/20 text-[#EFE5D8] hover:bg-white/10 text-xs uppercase tracking-wider transition-colors"
+          >
+            {copied ? 'Link copied' : 'Share this design'}
+            {copied ? <Check className="w-3.5 h-3.5 text-[#E4C78F]" /> : <Share2 className="w-3.5 h-3.5" />}
+          </button>
         </div>
         <p className="text-xs text-[#EFE5D8]/50">
           {index + 1} of {list.length} · use ▲ ▼ or the ↑ ↓ keys to browse
