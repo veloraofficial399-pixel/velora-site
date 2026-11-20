@@ -32,15 +32,21 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // Per-design tweaks for sites the automatic "open" detection gets wrong.
 // tap: [x, y] as fractions of the screen (where the real opening target is). wait: extra settle time (ms).
 const OVERRIDES = {
+  B4: { screencast: true, afterOpen: 4500 }, // heavy Next.js page (long intro): screenshot polling is too slow (choppy video)
+  C3: { screencast: true },
+  A2: { tap: [0.5, 0.47] }, // envelope with wax seal
+  A6: { tap: [0.5, 0.45] }, // green envelope
+  C1: { tap: [0.5, 0.5] }, // navy envelope (whole card is the button)
+  E3: { tap: [0.5, 0.5] }, // DA monogram envelope
   B1: { wait: 6000 }, // heavy background image; the button ignores taps until it has loaded
-  B2: { wait: 6000 }, // long fade-in intro
-  B6: { jsClick: '.ribbon-btn' }, // the ribbon bow button: a real touch doesn't reach it, a DOM click does
-  D5: { tap: [0.5, 0.44] }, // the wax seal
-  E1: { wait: 5000 }, // ticket page wires its click handler late
-  E3: { wait: 4000 },
-  A3: { tap: [0.5, 0.64] }, // the temple door's touch icon
+  B3: { wait: 6000 }, // long fade-in intro
+  B9: { jsClick: '.ribbon-btn' }, // the ribbon bow button: a real touch doesn't reach it, a DOM click does
+  D7: { tap: [0.5, 0.44] }, // the wax seal
+  E2: { wait: 5000 }, // ticket page wires its click handler late
+  E5: { wait: 4000 },
+  A5: { tap: [0.5, 0.64] }, // the temple door's touch icon
   A1: { hide: ['.skip-intro', 'button[aria-label*="sound" i]', 'button[aria-label*="skip" i]'] },
-  C1: { hide: ['button[aria-label*="skip" i]', '.skip', '.skip-opening', '.music-toggle', '.music-btn'] },
+  C2: { hide: ['button[aria-label*="skip" i]', '.skip', '.skip-opening', '.music-toggle', '.music-btn'] },
 };
 
 // Static stylesheet added to every page (no timers / scripts running while recording): hides music / sound / skip controls.
@@ -166,8 +172,17 @@ async function record({ code, url }) {
     // Capture fixed-size frames continuously, stamped with wall-clock time.
     let capturing = true;
     let paused = false; // capture stops while we retry a tap, so a heavy page gets the CPU it needs
+    // screencast mode (heavy pages): Chrome pushes every painted frame instead of us polling slow screenshots
+    const cast = OVERRIDES[code]?.screencast !== false; // default: screencast (smooth); set screencast:false to use screenshot polling
+    if (cast) {
+      on('Page.screencastFrame', (p) => {
+        if (capturing && !paused) frames.push({ data: p.data, t: p.metadata.timestamp });
+        send('Page.screencastFrameAck', { sessionId: p.sessionId });
+      });
+      await send('Page.startScreencast', { format: 'jpeg', quality: 90, maxWidth: W * SCALE, maxHeight: H * SCALE, everyNthFrame: 1 });
+    }
     const capture = (async () => {
-      while (capturing) {
+      while (capturing && !cast) {
         if (paused) { await sleep(25); continue; }
         const t = Date.now() / 1000;
         const shot = await send('Page.captureScreenshot', { format: 'jpeg', quality: 90, optimizeForSpeed: true });
@@ -214,6 +229,7 @@ async function record({ code, url }) {
       paused = false;
     }
     for (const wait of [800, 1200, 1000]) { await sleep(wait); await clean(); } // opening animation; controls appear after the tap
+    if (OVERRIDES[code]?.afterOpen) await sleep(OVERRIDES[code].afterOpen); // long opening animations: let the page unlock scrolling first
 
     // Smooth wheel scrolling (works for window and inner scroll containers), paced by elapsed time.
     await clean();
@@ -229,6 +245,7 @@ async function record({ code, url }) {
     await sleep(1200);
     capturing = false;
     await capture;
+    if (cast) await send('Page.stopScreencast');
     console.log(`  ${code}: tapped "${target.text}", ${frames.length} frames`);
 
     // Write frames with their real durations, then encode.
