@@ -32,18 +32,21 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // Per-design tweaks for sites the automatic "open" detection gets wrong.
 // tap: [x, y] as fractions of the screen (where the real opening target is). wait: extra settle time (ms).
 const OVERRIDES = {
-  B4: { screencast: true, afterOpen: 4500 }, // heavy Next.js page (long intro): screenshot polling is too slow (choppy video)
+  B6: { tap: [0.5, 0.03], afterOpen: 0 }, // N17 kayal: no opening screen; harmless tap at the very top, then scroll
+  C4: { tap: [0.5, 0.6], afterOpen: 3000 }, // N14 velvet: "tap to open" is inside the intro video; names fade in late
+  C7: { tap: [0.5, 0.5] }, // N16 malligai: whole hero is the door tap area
+  B5: { screencast: true, afterOpen: 4500 }, // heavy Next.js page (long intro): screenshot polling is too slow (choppy video)
   C3: { screencast: true },
   A2: { tap: [0.5, 0.47] }, // envelope with wax seal
   A6: { tap: [0.5, 0.45] }, // green envelope
   C1: { tap: [0.5, 0.5] }, // navy envelope (whole card is the button)
-  E3: { tap: [0.5, 0.5] }, // DA monogram envelope
+  E4: { tap: [0.5, 0.5] }, // DA monogram envelope
   B1: { wait: 6000 }, // heavy background image; the button ignores taps until it has loaded
   B3: { wait: 6000 }, // long fade-in intro
-  B8: { jsClick: '.ribbon-btn' }, // the ribbon bow button: a real touch doesn't reach it, a DOM click does
-  D7: { tap: [0.5, 0.44] }, // the wax seal
-  E2: { wait: 5000 }, // ticket page wires its click handler late
-  E5: { wait: 4000 },
+  B10: { jsClick: '.ribbon-btn' }, // the ribbon bow button: a real touch doesn't reach it, a DOM click does
+  D8: { tap: [0.5, 0.44] }, // the wax seal
+  E3: { wait: 5000 }, // ticket page wires its click handler late
+  E6: { wait: 4000 },
   A5: { tap: [0.5, 0.64] }, // the temple door's touch icon
   A1: { hide: ['.skip-intro', 'button[aria-label*="sound" i]', 'button[aria-label*="skip" i]'] },
   C2: { hide: ['button[aria-label*="skip" i]', '.skip', '.skip-opening', '.music-toggle', '.music-btn'] },
